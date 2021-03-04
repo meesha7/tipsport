@@ -1,0 +1,101 @@
+{% extends "ts/base.html" %}
+{% block content %}
+<script type="text/javascript">
+$(document).ready(function () {
+    $('input[name="won"]').on('click', function() {
+        $('input[name="closed"]').prop('checked', true);
+    });
+});
+</script>
+
+<h1 class="title">{{ bet.date|date:"d.m.Y H:i:s" }} - {{ bet.type_str }}</h1>
+<h2 class="subtitle has-text-grey">
+    {{ bet.amount }} &times; {{ bet.rate }} &rarr; {{ bet.revenue }},
+    profit: <span class="{% if bet.profit > 0 %}has-text-success{% else %}has-text-danger{% endif %}">{{ bet.profit }}</span>
+ </h2>
+
+<div class="field is-grouped is-grouped-multiline">
+    <div class="control">
+        <div class="tags has-addons">
+            <span class="tag is-dark">status</span>
+            {% if bet.closed %}
+            {% if bet.won %}
+            <span class="tag is-success">won</span>
+            {% else %}
+            <span class="tag is-danger">lost</span>
+            {% endif %}
+            {% else %}
+            <span class="tag is-light">pending</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<form class="" method="post" action="{% url 'ts:view_bet' bet.id %}">
+    <div class="field">
+        <label class="label">Bet</label>
+
+        <div class="control">
+            <input type="text" name="amount" value="{{ bet.amount }}">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Rate</label>
+
+        <div class="control">
+            <input type="text" name="rate" value="{{ bet.rate }}">
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" name="won"{% if bet.won %} checked{% endif %}>
+                Won
+            </label>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" name="closed"{% if bet.closed %} checked{% endif %}>
+                Closed
+            </label>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Sport</label>
+        <div class="control">
+            <div class="select">
+                <select name="id_sport">
+                    <option value="0">-</option>
+                    {% for sport in sports %}
+                    <option value="{{ sport.id }}"{% if sport.id == bet.sport.id %} selected{% endif %}>{{ sport.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="field is-grouped">
+        <div class="control">
+            <button class="button is-primary" name="save" value="1"><i class="fas fa-fw fa-save"></i> Save</button>
+        </div>
+
+        {% if not bet.closed %}
+        <div class="control">
+            <button class="button is-success" name="make_won" value="1"><i class="fas fa-fw fa-thumbs-up"></i> Won</button>
+        </div>
+
+        <div class="control">
+            <button class="button is-danger" name="make_lost" value="1"><i class="fas fa-fw fa-thumbs-down"></i> Lost</button>
+        </div>
+        {% endif %}
+    </div>
+
+    {% csrf_token %}
+</form>
+{% endblock content %}

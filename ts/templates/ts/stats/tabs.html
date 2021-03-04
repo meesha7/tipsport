@@ -1,0 +1,11 @@
+<h1 class="title">Stats</h1>
+
+<div class="tabs">
+    <ul>
+        <li{% if REQ == '/ts/stats/overview/' %} class="is-active"{% endif %}><a href="{% url 'ts:stats_overview' %}">Overview</a></li>
+        <li{% if REQ == '/ts/stats/counts/' %} class="is-active"{% endif %}><a href="{% url 'ts:stats_counts' %}">Counts</a></li>
+        <li{% if REQ == '/ts/stats/results/' %} class="is-active"{% endif %}><a href="{% url 'ts:stats_results' %}">Results</a></li>
+        <li{% if '/ts/stats/sport/' in REQ %} class="is-active"{% endif %}><a href="{% url 'ts:stats_sport' %}">Sports</a></li>
+        <li{% if REQ == '/ts/stats/history/' %} class="is-active"{% endif %}><a href="{% url 'ts:stats_history' %}">History</a></li>
+    </ul>
+</div>

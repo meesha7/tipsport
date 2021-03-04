@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html charset="utf-8">
+<head>
+    <title>{% if title %}{{ title }} | {% endif %}Tipsport helper</title>
+
+    <script type="text/javascript" src="{% static 'ts/js/jquery-3.3.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ts/js/Chart.bundle.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ts/js/Chart.Bands.min.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'ts/css/bulma.css' %}">
+    <link rel="stylesheet" href="{% static 'ts/css/fontawesome-all.min.css' %}">
+</head>
+
+<body>
+    <div class="navbar has-shadow">
+        <div class="navbar-menu">
+            <a class="navbar-item is-tab{% if REQ == '/ts/' %} is-active{% endif %}" href="{% url 'ts:index' %}">
+                <i class="fas fa-home fa-fw fa-pull-left"></i> Home
+            </a>
+            <a class="navbar-item is-tab{% if REQ == '/ts/bets/' %} is-active{% endif %}" href="{% url 'ts:list_bets' %}">
+                <i class="fas fa-list fa-fw fa-pull-left"></i> Bets
+            </a>
+            <a class="navbar-item is-tab{% if '/ts/stats/' in REQ %} is-active{% endif %}" href="{% url 'ts:stats_results' %}">
+                <i class="fas fa-chart-line fa-fw fa-pull-left"></i> Stats
+            </a>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                Balance: {{ ACC.balance }},
+                Bet: {{ amount_bet }},
+                Total: {{ amount_total }}
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            {% block content %}
+            {% endblock content %}
+        </div>
+    </div>
+</body>
+</html>

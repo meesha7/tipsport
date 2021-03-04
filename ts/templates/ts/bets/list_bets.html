@@ -1,0 +1,144 @@
+{% extends "ts/base.html" %}
+{% block content %}
+<h1 class="title">Bets</h1>
+
+<form method="post" action="{% url 'ts:list_bets' %}">
+    <div class="field is-horizontal">
+        <div class="field-body">
+            <div class="field">
+                <label class="label">Date</label>
+                <input class="input" type="text" name="date" placeholder="DD.MM.YY HH:MM:SS" value="">
+            </div>
+
+            <div class="field">
+                <label class="label">Type</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        <select name="bet_type">
+                            {% for bet_type in bet_types %}
+                            <option value="{{ bet_type.0 }}"{% if bet_type.0 == last_bet.bet_type %} selected{% endif %}>{{ bet_type.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Sport</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        <select name="id_sport">
+                            <option value="0">-</option>
+                            {% for sport in sports %}
+                            <option value="{{ sport.id }}"{% if sport.id == last_bet.sport.id %} selected{% endif %}>{{ sport.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Rate</label>
+                <input class="input" type="text" name="rate" placeholder="rate">
+            </div>
+
+            <div class="field">
+                <label class="label">Amount</label>
+                <input class="input" type="text" name="amount" placeholder="amount">
+            </div>
+
+            <div class="field">
+                <label class="label">&nbsp;</label>
+                <input class="button is-primary" type="submit" name="add" value="Add">
+            </div>
+        </div>
+    </div>
+    {% csrf_token %}
+</form>
+
+<form method="post" action="{% url 'ts:list_bets' %}">
+
+<table class="table is-bordered is-striped is-hoverable is-fullwidth is-narrow">
+    <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Sport</th>
+        <th>Rate</th>
+        <th>Bet</th>
+        <th>Won</th>
+        <th>Profit</th>
+        <th>State</th>
+        <th>Action</th>
+    </tr>
+    {% for bet in bets %}
+    <tr>
+        <td><a href="{% url 'ts:view_bet' bet.id %}">{{ bet.date|date:"d.m.Y H:i:s" }}</a></td>
+        <td>{{ bet.type_str }}</td>
+        <td>
+            {% if bet.sport %}
+            <a href="{% url 'ts:stats_sport' bet.sport %}">{{ bet.sport }}</a>
+            {% else %}
+            <select name="{{ bet.id }}__id_sport">
+                <option value="0">-</option>
+                {% for sport in sports %}
+                <option value="{{ sport.id }}"{% if sport.id == bet.sport.id %} selected{% endif %}>{{ sport.name }}</option>
+                {% endfor %}
+            </select>
+            {% endif %}
+        </td>
+        <td>
+            {% if bet.rate %}
+            {{ bet.rate }}
+            {% else %}
+            <input type="text" name="{{ bet.id }}__rate" value="">
+            {% endif %}
+        </td>
+        <td>{{ bet.amount }}</td>
+        <td>{{ bet.revenue }}</td>
+        <td>
+            <span class="{% if bet.profit > 0 %}has-text-success{% else %}has-text-danger{% endif %}">{{ bet.profit }}</span>
+            {% if not bet.closed %}
+            <sup class="has-text-grey">{{ bet.potential_profit }}</sup>
+            {% endif %}
+        </td>
+        <td>
+            {% if bet.closed %}
+            {% if bet.won %}
+            <span class="tag is-success"><i class="fas fa-check fa-fw fa-pull-left"></i> Won</span>
+            {% else %}
+            <span class="tag is-danger"><i class="fas fa-times fa-fw fa-pull-left"></i> Lost</span>
+            {% endif %}
+            {% else %}
+            <span class="tag is-light"><i class="fas fa-hourglass-half fa-fw fa-pull-left"></i> Pending</span>
+            {% endif %}
+        </td>
+        <td>
+            {% if not bet.closed %}
+            <form method="post" action="{% url 'ts:list_bets' %}">
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button class="button is-small is-success" name="make_won" value="1"><i class="fas fa-fw fa-thumbs-up"></i></button>
+                    </div>
+                    <div class="control">
+                        <button class="button is-small is-danger" name="make_lost" value="1"><i class="fas fa-fw fa-thumbs-down"></i></button>
+                    </div>
+                </div>
+
+                <input type="hidden" name="bet_id" value="{{ bet.id }}">
+                {% csrf_token %}
+            </form>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<button class="button is-primary" name="save" value="1">Save</button>
+{% csrf_token %}
+</form>
+
+<br>
+
+{% include 'ts/pager.html' %}
+
+{% endblock content %}

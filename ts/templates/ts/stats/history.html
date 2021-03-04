@@ -1,0 +1,54 @@
+{% extends "ts/base.html" %}
+{% block content %}
+{% include 'ts/stats/tabs.html' %}
+
+<script type="text/javascript">
+var dates = [{% for entry in profit_history.keys %}"{{ entry|date:"M Y" }}",{% endfor %}];
+var profits = [{% for entry in profit_history.values %}{% if entry %}{{ entry }}{% else %}0{% endif %},{% endfor %}];
+
+$(document).ready(function () {
+    var ctx = $('#profit-history');
+    var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [
+                {
+                    data: profits,
+                    label: 'Profit',
+                    fill: false,
+                    borderColor: "#23d160",
+                    backgroundColor: "#fff",
+                    lineTension: 0
+                }
+            ]
+        },
+        options: {
+            title: {
+                text: 'Profit over time',
+                display: true
+            },
+            responsive: false,
+            bands: {
+                yValue: 0,                // The threshold value on the yAxis (default is false)
+                bandLine: {                // The display properties of the threshold line
+                    stroke: 0.01,
+                    colour: 'rgba(0, 0, 0, 1.000)',
+                    type: 'solid',            // 'solid' or 'dashed'
+                    label: '',
+                    fontSize: '12',
+                    fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif',
+                    fontStyle: 'normal'
+                },
+                belowThresholdColour: [      // An array of the colors that describes the below threshold colour to use the above threshold color is inherited from the dataset
+                    '#ff3860'
+                ]
+            }
+        }
+    });
+});
+</script>
+
+<canvas id="profit-history" height="600px" width="1200px"></canvas>
+
+{% endblock content %}

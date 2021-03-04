@@ -1,0 +1,10 @@
+{% extends "ts/base.html" %}
+{% block content %}
+{% include 'ts/stats/tabs.html' %}
+
+<p>
+    Total bets: {{ total_bets }}<br>
+    Won: {{ won_bets }}<br>
+    Lost: {{ lost_bets }}
+</p>
+{% endblock content %}

@@ -1,0 +1,71 @@
+{% extends "ts/base.html" %}
+{% block content %}
+{% include 'ts/stats/tabs.html' %}
+
+<div class="columns">
+    <div class="column">
+        <table class="table is-bordered is-narrow is-striped">
+            <tr>
+                <th>Sport</th>
+                <th>Bets</th>
+            </tr>
+            {% for entry in bets_by_sport %}
+            <tr>
+                <td>{{ entry.sport__name }}</td>
+                <td>{{ entry.total }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="column">
+        <table class="table is-bordered is-narrow is-striped">
+            <tr>
+                <th>Sport</th>
+                <th>Wins</th>
+            </tr>
+            {% for entry in wins_by_sport %}
+            <tr>
+                <td>{{ entry.sport__name }}</td>
+                <td>{{ entry.total }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="column">
+        <table class="table is-bordered is-narrow is-striped">
+            <tr>
+                <th>Sport</th>
+                <th>Losses</th>
+            </tr>
+            {% for entry in losses_by_sport %}
+            <tr>
+                <td>{{ entry.sport__name }}</td>
+                <td>{{ entry.total }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="column">
+        <table class="table is-bordered is-narrow is-striped">
+            <tr>
+                <th>Sport</th>
+                <th>Success rate</th>
+            </tr>
+            {% for sport, rate in success_rates.items %}
+            <tr>
+                <td>{{ sport }}</td>
+                <td>
+                    {% if rate > 90 %}<i class="fas fa-caret-up has-text-success"></i>
+                    {% elif rate > 75 %}<i class="fas fa-minus has-text-warning"></i>
+                    {% else %}<i class="fas fa-caret-down has-text-danger"></i>{% endif %}
+                    {{ rate|floatformat:2 }}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock content %}

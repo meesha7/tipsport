@@ -1,0 +1,19 @@
+{% if pager.pages|length > 1 %}
+<nav class="pagination" role="navigation">
+    <ul class="pagination-list">
+        {% if pager.page.current > 1 %}
+        <li><a class="pagination-link" href="?p=1{{ pager.get }}{% if filters %}&amp;{{ filters }}{% endif %}">&laquo;</a></li>
+        <li><a class="pagination-link" href="?p={{ pager.page.previous }}{{ pager.get }}{% if filters %}&amp;{{ filters }}{% endif %}">&lsaquo;</a></li>
+        {% endif %}
+
+        {% for page in pager.around %}
+        <li><a class="pagination-link{% if pager.page.current == page %} is-current{% endif %}" href="?p={{ page }}{{ pager.get }}{% if filters %}&amp;{{ filters }}{% endif %}">{{ page }}</a></li>
+        {% endfor %}
+
+        {% if pager.page.current < pager.page.last %}
+        <li><a class="pagination-link" href="?p={{ pager.page.next }}{{ pager.get }}{% if filters %}&amp;{{ filters }}{% endif %}">&rsaquo;</a></li>
+        <li><a class="pagination-link" href="?p={{ pager.page.last }}{{ pager.get }}{% if filters %}&amp;{{ filters }}{% endif %}">&raquo;</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
